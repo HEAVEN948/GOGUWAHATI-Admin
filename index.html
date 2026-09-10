@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GOGUWAHATI Admin</title>
+<link rel="manifest" id="manifest-link">
 <style>
   :root {
     --purple-deep: #241436;
@@ -51,7 +52,11 @@
 
 <header>
   <span>🛡️ GOGUWAHATI Admin</span>
-  <button id="btnLogout" class="btn-outline btn-small" style="display:none;">Logout</button>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <button id="btnInstallAdmin" title="Install App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">📲</button>
+    <button id="btnShareAdmin" title="Share App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">🔗</button>
+    <button id="btnLogout" class="btn-outline btn-small" style="display:none;">Logout</button>
+  </div>
 </header>
 
 <div id="loginScreen" class="login-wrap">
@@ -283,6 +288,60 @@ function renderActiveRides(rides) {
       </div>
     </div>
   `).join('')}</div>`;
+}
+
+// ================= INSTALL / SHARE =================
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+document.getElementById('btnInstallAdmin').addEventListener('click', async () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+  } else {
+    alert('App may already be installed, or on iPhone: tap Share in Safari, then "Add to Home Screen".');
+  }
+});
+
+document.getElementById('btnShareAdmin').addEventListener('click', () => {
+  const shareData = { title: 'GOGUWAHATI Admin', url: window.location.href };
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copied to clipboard!');
+  }
+});
+
+// ================= PWA MANIFEST (shield + car icon, admin variant) =================
+const adminIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#241436"/>
+  <path d="M256 90 L400 140 L400 260 Q400 380 256 430 Q112 380 112 260 L112 140 Z" fill="#6D3FC7" opacity="0.5"/>
+  <path d="M180 260 L230 310 L340 190" stroke="#F2B705" stroke-width="24" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+const manifest = {
+  name: "GOGUWAHATI Admin",
+  short_name: "GG Admin",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#241436",
+  theme_color: "#241436",
+  icons: [{
+    src: "data:image/svg+xml," + encodeURIComponent(adminIconSvg),
+    sizes: "512x512",
+    type: "image/svg+xml"
+  }]
+};
+const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
+
+// ================= SERVICE WORKER =================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed:', err));
 }
 </script>
 </body>
