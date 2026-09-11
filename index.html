@@ -162,7 +162,15 @@ function renderDrivers(drivers) {
 }
 
 function driverRowHtml(id, d) {
-  const verifiedBadge = d.verified ? '<span class="badge badge-green">Verified</span>' : '<span class="badge badge-gray">Unverified</span>';
+  const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+  const verificationStillValid = d.verified && d.verifiedAt && (Date.now() - d.verifiedAt) < oneYearMs;
+  const verifiedBadge = d.verified
+    ? (d.verifiedAt
+        ? (verificationStillValid
+            ? `<span class="badge badge-green">Verified (until ${new Date(d.verifiedAt + oneYearMs).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})})</span>`
+            : `<span class="badge badge-red">Verification Expired</span>`)
+        : '<span class="badge badge-green">Verified</span>')
+    : '<span class="badge badge-gray">Unverified</span>';
   const blockedBadge = d.blocked ? '<span class="badge badge-red">Blocked</span>' : '';
   const passActive = d.passExpiresAt && d.passExpiresAt > Date.now();
   const passBadge = passActive ? '<span class="badge badge-green">Pass Active</span>' : '<span class="badge badge-gray">No Active Pass</span>';
@@ -184,9 +192,9 @@ function driverRowHtml(id, d) {
       </div>
       <div style="margin-top:8px;">${verifiedBadge} ${blockedBadge} ${passBadge} ${onlineBadge}</div>
       <div class="row-actions">
-        ${d.verified
+        ${verificationStillValid
           ? `<button class="btn-small btn-outline" onclick="setDriverField('${id}','verified',false)">Unverify</button>`
-          : `<button class="btn-small btn-verify" onclick="setDriverField('${id}','verified',true)">Verify</button>`
+          : `<button class="btn-small btn-verify" onclick="verifyDriver('${id}')">${d.verified ? 'Re-verify' : 'Verify'}</button>`
         }
         ${d.blocked
           ? `<button class="btn-small btn-verify" onclick="setDriverField('${id}','blocked',false)">Unblock</button>`
@@ -210,6 +218,10 @@ function filterDrivers(query) {
 
 function setDriverField(id, field, value) {
   db.ref('drivers/' + id).update({ [field]: value });
+}
+
+function verifyDriver(id) {
+  db.ref('drivers/' + id).update({ verified: true, verifiedAt: Date.now() });
 }
 
 function confirmBlock(id, name) {
@@ -242,7 +254,7 @@ function renderRecharges(requests) {
       <div class="driver-top">
         <div>
           <div class="driver-name">${r.driverName}</div>
-          <div class="driver-meta">${r.driverPhone} · ₹${r.amount} · Ref: ${r.txnRef}</div>
+          <div class="driver-meta">${r.driverPhone} · ₹${r.amount}${r.txnRef ? ' · Ref: ' + r.txnRef : ' · No reference given'}</div>
         </div>
       </div>
       <div class="row-actions">
