@@ -7,45 +7,53 @@
 <link rel="manifest" id="manifest-link">
 <style>
   :root {
-    --purple-deep: #241436;
+    --bg: #0A0A0C;
+    --surface: #16151C;
+    --surface-2: #1F1E27;
+    --border: rgba(255,255,255,0.08);
     --purple: #6D3FC7;
+    --purple-soft: rgba(109,63,199,0.18);
     --gold: #F2B705;
-    --river: #3E8FB0;
-    --bg: #F7F5FC;
-    --text: #241436;
-    --danger: #E24C4B;
-    --success: #2AAE6C;
+    --text: #F5F3FA;
+    --text-dim: #9A97A8;
+    --danger: #E85D5C;
+    --danger-soft: rgba(232,93,92,0.14);
+    --success: #37C47F;
+    --success-soft: rgba(55,196,127,0.14);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 40px; }
   h1,h2,h3 { font-family: 'Poppins', sans-serif; }
-  header { background: var(--purple-deep); color: #fff; padding: 18px 20px; font-weight: 700; font-size: 17px; display: flex; justify-content: space-between; align-items: center; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); color: #fff; padding: 18px 20px; font-weight: 700; font-size: 17px; display: flex; justify-content: space-between; align-items: center; }
   main { max-width: 600px; margin: 0 auto; padding: 16px; }
-  .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
-  input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; margin-bottom: 10px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; margin-bottom: 10px; background: var(--surface-2); color: var(--text); }
+  input::placeholder { color: var(--text-dim); }
   button { padding: 12px 18px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .btn-purple { background: var(--purple); color: #fff; width: 100%; padding: 14px; border-radius: 30px; font-size: 15px; }
   .btn-small { padding: 8px 14px; font-size: 13px; border-radius: 20px; }
-  .btn-verify { background: var(--success); color: #fff; }
-  .btn-block { background: var(--danger); color: #fff; }
-  .btn-outline { background: #fff; border: 1px solid #ddd; color: #555; }
+  .btn-verify { background: var(--success); color: #06120A; }
+  .btn-block { background: var(--danger); color: #1A0505; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
   .tabs { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; }
-  .tab-btn { padding: 8px 16px; border-radius: 20px; border: none; background: #eee; color: #666; font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .tab-btn { padding: 8px 16px; border-radius: 20px; border: none; background: var(--surface); color: var(--text-dim); font-weight: 600; font-size: 13px; white-space: nowrap; }
   .tab-btn.active { background: var(--purple); color: #fff; }
   .badge { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; }
-  .badge-green { background: #E3F7EC; color: var(--success); }
-  .badge-red { background: #FDEAEA; color: var(--danger); }
-  .badge-gray { background: #eee; color: #888; }
-  .driver-row { border-bottom: 1px solid #f0f0f0; padding: 14px 0; }
+  .badge-green { background: var(--success-soft); color: var(--success); }
+  .badge-red { background: var(--danger-soft); color: var(--danger); }
+  .badge-gray { background: var(--surface-2); color: var(--text-dim); }
+  .driver-row { border-bottom: 1px solid var(--border); padding: 14px 0; }
   .driver-row:last-child { border-bottom: none; }
   .driver-top { display: flex; justify-content: space-between; align-items: start; }
-  .driver-name { font-weight: 700; font-size: 15px; }
-  .driver-meta { font-size: 12px; color: #888; margin-top: 2px; }
+  .driver-name { font-weight: 700; font-size: 15px; color: var(--text); }
+  .driver-meta { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
   .row-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
   .search-box { margin-bottom: 14px; }
-  .empty-state { text-align: center; padding: 30px; color: #999; font-size: 14px; }
+  .empty-state { text-align: center; padding: 30px; color: var(--text-dim); font-size: 14px; }
   .login-wrap { max-width: 360px; margin: 80px auto 0; padding: 0 20px; }
   .login-wrap .card { text-align: center; }
+  .day-header { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; padding: 14px 0 6px; }
+  .day-header:first-child { padding-top: 0; }
 </style>
 </head>
 <body>
@@ -53,8 +61,8 @@
 <header>
   <span>🛡️ GOGUWAHATI Admin</span>
   <div style="display:flex; gap:8px; align-items:center;">
-    <button id="btnInstallAdmin" title="Install App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">📲</button>
-    <button id="btnShareAdmin" title="Share App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">🔗</button>
+    <button id="btnInstallAdmin" title="Install App" style="background:rgba(255,255,255,0.08); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">📲</button>
+    <button id="btnShareAdmin" title="Share App" style="background:rgba(255,255,255,0.08); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">🔗</button>
     <button id="btnLogout" class="btn-outline btn-small" style="display:none;">Logout</button>
   </div>
 </header>
@@ -177,7 +185,7 @@ function driverRowHtml(id, d) {
   const onlineBadge = d.online ? '<span class="badge badge-green">Online</span>' : '';
   const photoHtml = d.photoBase64
     ? `<img src="${d.photoBase64}" style="width:48px; height:48px; border-radius:50%; object-fit:cover; margin-right:12px;">`
-    : `<div style="width:48px; height:48px; border-radius:50%; background:#F0EBFA; color:var(--purple); display:flex; align-items:center; justify-content:center; font-weight:700; margin-right:12px;">${(d.name||'?').charAt(0)}</div>`;
+    : `<div style="width:48px; height:48px; border-radius:50%; background:var(--purple-soft); color:var(--purple); display:flex; align-items:center; justify-content:center; font-weight:700; margin-right:12px;">${(d.name||'?').charAt(0)}</div>`;
 
   return `
     <div class="driver-row" data-name="${(d.name||'').toLowerCase()}" data-phone="${d.phone||''}">
@@ -235,11 +243,25 @@ function grantPass(id) {
   alert('24-hour pass granted.');
 }
 
-// ================= RECHARGE REQUESTS =================
+// ================= RECHARGE REQUESTS (daily-grouped, auto-archiving) =================
 function loadRecharges() {
+  // Only ever shows PENDING requests. Confirmed/rejected ones are moved out
+  // to rechargeRequestsArchive (see confirmRecharge/rejectRecharge below),
+  // so this list never fills up with old, already-handled requests.
   db.ref('rechargeRequests').orderByChild('status').equalTo('pending').on('value', snapshot => {
     renderRecharges(snapshot.val());
   });
+}
+
+function dayLabel(ts) {
+  if (!ts) return 'Undated';
+  const d = new Date(ts);
+  const today = new Date();
+  const yest = new Date(); yest.setDate(today.getDate() - 1);
+  const sameDay = (a, b) => a.toDateString() === b.toDateString();
+  if (sameDay(d, today)) return 'Today';
+  if (sameDay(d, yest)) return 'Yesterday';
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 function renderRecharges(requests) {
@@ -249,29 +271,53 @@ function renderRecharges(requests) {
     return;
   }
   const entries = Object.entries(requests).sort((a,b) => (b[1].submittedAt||0) - (a[1].submittedAt||0));
-  panel.innerHTML = `<div class="card">${entries.map(([id, r]) => `
-    <div class="driver-row">
-      <div class="driver-top">
-        <div>
-          <div class="driver-name">${r.driverName}</div>
-          <div class="driver-meta">${r.driverPhone} · ₹${r.amount}${r.txnRef ? ' · Ref: ' + r.txnRef : ' · No reference given'}</div>
+
+  // group by day
+  const groups = {};
+  entries.forEach(([id, r]) => {
+    const label = dayLabel(r.submittedAt);
+    if (!groups[label]) groups[label] = [];
+    groups[label].push([id, r]);
+  });
+
+  let html = `<div class="card">`;
+  Object.entries(groups).forEach(([label, items]) => {
+    html += `<div class="day-header">${label} · ${items.length} request${items.length > 1 ? 's' : ''}</div>`;
+    html += items.map(([id, r]) => `
+      <div class="driver-row">
+        <div class="driver-top">
+          <div>
+            <div class="driver-name">${r.driverName}</div>
+            <div class="driver-meta">${r.driverPhone} · ₹${r.amount}${r.txnRef ? ' · Ref: ' + r.txnRef : ' · No reference given'}</div>
+          </div>
+        </div>
+        <div class="row-actions">
+          <button class="btn-small btn-verify" onclick="confirmRecharge('${id}','${r.driverId}')">Confirm &amp; Activate</button>
+          <button class="btn-small btn-block" onclick="rejectRecharge('${id}')">Reject</button>
         </div>
       </div>
-      <div class="row-actions">
-        <button class="btn-small btn-verify" onclick="confirmRecharge('${id}','${r.driverId}')">Confirm & Activate</button>
-        <button class="btn-small btn-block" onclick="rejectRecharge('${id}')">Reject</button>
-      </div>
-    </div>
-  `).join('')}</div>`;
+    `).join('');
+  });
+  html += `</div>`;
+  panel.innerHTML = html;
+}
+
+function archiveAndRemove(rechargeId, extraFields) {
+  db.ref('rechargeRequests/' + rechargeId).once('value').then(snap => {
+    const data = snap.val();
+    if (!data) return;
+    db.ref('rechargeRequestsArchive/' + rechargeId).set({ ...data, ...extraFields });
+    db.ref('rechargeRequests/' + rechargeId).remove();
+  });
 }
 
 function confirmRecharge(rechargeId, driverId) {
   db.ref('drivers/' + driverId).update({ passExpiresAt: Date.now() + PASS_DURATION_MS });
-  db.ref('rechargeRequests/' + rechargeId).update({ status: 'confirmed', confirmedAt: Date.now() });
+  archiveAndRemove(rechargeId, { status: 'confirmed', confirmedAt: Date.now() });
 }
 
 function rejectRecharge(rechargeId) {
-  db.ref('rechargeRequests/' + rechargeId).update({ status: 'rejected', rejectedAt: Date.now() });
+  archiveAndRemove(rechargeId, { status: 'rejected', rejectedAt: Date.now() });
 }
 
 // ================= ACTIVE RIDES =================
@@ -331,8 +377,8 @@ document.getElementById('btnShareAdmin').addEventListener('click', () => {
 
 // ================= PWA MANIFEST (shield + car icon, admin variant) =================
 const adminIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#241436"/>
-  <path d="M256 90 L400 140 L400 260 Q400 380 256 430 Q112 380 112 260 L112 140 Z" fill="#6D3FC7" opacity="0.5"/>
+  <rect width="512" height="512" rx="96" fill="#0A0A0C"/>
+  <path d="M256 90 L400 140 L400 260 Q400 380 256 430 Q112 380 112 260 L112 140 Z" fill="#6D3FC7" opacity="0.6"/>
   <path d="M180 260 L230 310 L340 190" stroke="#F2B705" stroke-width="24" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
 const manifest = {
@@ -340,8 +386,8 @@ const manifest = {
   short_name: "GG Admin",
   start_url: ".",
   display: "standalone",
-  background_color: "#241436",
-  theme_color: "#241436",
+  background_color: "#0A0A0C",
+  theme_color: "#0A0A0C",
   icons: [{
     src: "data:image/svg+xml," + encodeURIComponent(adminIconSvg),
     sizes: "512x512",
