@@ -211,6 +211,7 @@ function driverRowHtml(id, d) {
         <button class="btn-small btn-outline" onclick="grantPass('${id}')">Grant 24hr Pass</button>
         <a class="btn-small btn-outline" style="text-decoration:none;" href="tel:${d.phone}">Call</a>
         <a class="btn-small btn-outline" style="text-decoration:none;" href="https://wa.me/${d.phone}" target="_blank">WhatsApp</a>
+        <button class="btn-small btn-block" onclick="confirmDelete('${id}','${d.name}')">🗑️ Remove</button>
       </div>
     </div>
   `;
@@ -235,6 +236,12 @@ function verifyDriver(id) {
 function confirmBlock(id, name) {
   if (confirm(`Block ${name}? They will be locked out immediately.`)) {
     setDriverField(id, 'blocked', true);
+  }
+}
+
+function confirmDelete(id, name) {
+  if (confirm(`Permanently remove ${name}? This deletes their account, documents, and history. This cannot be undone.`)) {
+    db.ref('drivers/' + id).remove();
   }
 }
 
@@ -272,7 +279,6 @@ function renderRecharges(requests) {
   }
   const entries = Object.entries(requests).sort((a,b) => (b[1].submittedAt||0) - (a[1].submittedAt||0));
 
-  // group by day
   const groups = {};
   entries.forEach(([id, r]) => {
     const label = dayLabel(r.submittedAt);
